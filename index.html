@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SureLoans - Professional Loan Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --dark-color: #34495e;
+            --light-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .tagline {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-btn.active {
+            background: var(--primary-color);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--secondary-color);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .file-upload-label i {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-color), #c0392b);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .interest-calculator {
+            background: linear-gradient(135deg, #e8f5e8, #d5f4e6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .calculator-result {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .result-item .label {
+            font-size: 12px;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .result-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .loan-terms {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .loan-terms h3 {
+            color: var(--warning-color);
+            margin-bottom: 15px;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .term-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: var(--warning-color);
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: var(--accent-color);
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+
+        .application-summary {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .summary-item .label {
+            font-size: 12px;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .summary-item .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: var(--success-color);
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: var(--warning-color);
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: var(--accent-color);
+            border: 1px solid #f5c6cb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+            margin-left: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .loan-requirements {
+            background: #e8f4fd;
+            border-left: 4px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .requirements-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .requirements-list li i {
+            color: var(--success-color);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-university"></i> SureLoans</h1>
+            <p class="tagline">Your trusted loan partner for quick and easy loan solutions - Fast, Secure, Reliable</p>
+            
+            <!-- Navigation -->
+            <div class="navigation">
+                <button class="nav-btn active" onclick="showSection('application')">
+                    <i class="fas fa-file-alt"></i> New Application
+                </button>
+                <button class="nav-btn" onclick="showSection('calculator')">
+                    <i class="fas fa-calculator"></i> Loan Calculator
+                </button>
+                <button class="nav-btn" onclick="showSection('dashboard')">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="showSection('terms')">
+                    <i class="fas fa-book"></i> Terms & Conditions
+                </button>
+            </div>
+        </div>
+
+        <!-- Loan Application Section -->
+        <div id="application" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>Loan Application Form</h2>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="applicationProgress"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0% Complete</div>
+                </div>
+
+                <!-- Loan Requirements -->
+                <div class="loan-requirements">
+                    <h3><i class="fas fa-info-circle"></i> Required Documents & Collateral</h3>
+                    <ul class="requirements-list">
+                        <li><i class="fas fa-check"></i> Valid NRC/Passport/Driving License</li>
+                        <li><i class="fas fa-check"></i> Student ID (Students Only)</li>
+                        <li><i class="fas fa-check"></i> High-value collateral (Laptop, Phone, TV, etc.)</li>
+                        <li><i class="fas fa-check"></i> Next of kin contact information</li>
+                        <li><i class="fas fa-check"></i> Proof of residence</li>
+                    </ul>
+                </div>
+
+                <form id="loanApplicationForm" class="form-grid">
+                    <!-- Personal Information -->
+                    <div class="form-group">
+                        <label for="fullName"><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Enter your full legal name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number *</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="+260 XXX XXX XXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nextOfKinPhone"><i class="fas fa-phone-alt"></i> Next of Kin Phone *</label>
+                        <input type="tel" id="nextOfKinPhone" name="nextOfKinPhone" required placeholder="+260 XXX XXX XXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nationality"><i class="fas fa-flag"></i> Nationality</label>
+                        <select id="nationality" name="nationality" required>
+                            <option value="">Select nationality</option>
+                            <option value="zambian" selected>Zambian</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Loan Details -->
+                    <div class="form-group">
+                        <label for="loanAmount"><i class="fas fa-money-bill"></i> Amount Collecting (K) *</label>
+                        <input type="number" id="loanAmount" name="loanAmount" min="500" max="100000" required placeholder="Min: K500, Max: K100,000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loanDuration"><i class="fas fa-calendar-alt"></i> Duration (Weeks) *</label>
+                        <select id="loanDuration" name="loanDuration" required>
+                            <option value="">Select duration</option>
+                            <option value="1">1 Week (20% interest)</option>
+                            <option value="2">2 Weeks (25% interest)</option>
+                            <option value="3">3 Weeks (35% interest)</option>
+                            <option value="4">4 Weeks (40% interest)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="collectDate"><i class="fas fa-calendar-check"></i> Date Collecting *</label>
+                        <input type="date" id="collectDate" name="collectDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueDate"><i class="fas fa-calendar-times"></i> Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate" readonly>
+                    </div>
+
+                    <!-- Document Uploads -->
+                    <div class="form-group">
+                        <label for="idDocument"><i class="fas fa-id-card"></i> NRC/Passport/Driving License *</label>
+                        <div class="file-upload">
+                            <input type="file" id="idDocument" name="idDocument" accept="image/*,.pdf" required>
+                            <label for="idDocument" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click to upload ID document</span>
+                            </label>
+                            <div class="file-preview" id="idPreview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentId"><i class="fas fa-graduation-cap"></i> Student ID (Students Only)</label>
+                        <div class="file-upload">
+                            <input type="file" id="studentId" name="studentId" accept="image/*,.pdf">
+                            <label for="studentId" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click to upload Student ID</span>
+                            </label>
+                            <div class="file-preview" id="studentPreview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="collateralDocument"><i class="fas fa-shield-alt"></i> Collateral Documentation *</label>
+                        <div class="file-upload">
+                            <input type="file" id="collateralDocument" name="collateralDocument" accept="image/*,.pdf" multiple required>
+                            <label for="collateralDocument" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Upload collateral photos/documents</span>
+                            </label>
+                            <div class="file-preview" id="collateralPreview"></div>
+                        </div>
+                    </div>
+
+                    <!-- Collateral Details -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="collateralDescription"><i class="fas fa-clipboard-list"></i> Collateral Description *</label>
+                        <textarea id="collateralDescription" name="collateralDescription" rows="4" required 
+                                placeholder="Describe your collateral item(s) in detail (brand, model, condition, value, etc.)"></textarea>
+                    </div>
+
+                    <!-- Loan Summary (Auto-calculated) -->
+                    <div class="application-summary" style="grid-column: 1 / -1;">
+                        <h3><i class="fas fa-calculator"></i> Loan Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="label">Amount Collecting</div>
+                                <div class="value" id="summaryAmount">K0</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">Interest Rate</div>
+                                <div class="value" id="summaryRate">0%</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">Interest Amount</div>
+                                <div class="value" id="summaryInterest">K0</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">Amount Returning</div>
+                                <div class="value" id="summaryTotal">K0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div style="grid-column: 1 / -1;">
+                        <button type="submit" class="btn btn-success btn-full" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loan Calculator Section -->
+        <div id="calculator" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calculator"></i>
+                    <h2>Advanced Loan Calculator</h2>
+                </div>
+
+                <div class="loan-terms">
+                    <h3><i class="fas fa-percent"></i> Current Interest Rates</h3>
+                    <div class="terms-grid">
+                        <div class="term-item">1 Week - 20%</div>
+                        <div class="term-item">2 Weeks - 25%</div>
+                        <div class="term-item">3 Weeks - 35%</div>
+                        <div class="term-item">4 Weeks - 40%</div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="calcAmount">Loan Amount (K)</label>
+                        <input type="number" id="calcAmount" min="500" max="100000" value="5000" oninput="calculateLoan()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calcDuration">Duration</label>
+                        <select id="calcDuration" onchange="calculateLoan()">
+                            <option value="1">1 Week</option>
+                            <option value="2">2 Weeks</option>
+                            <option value="3">3 Weeks</option>
+                            <option value="4">4 Weeks</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="interest-calculator">
+                    <h3><i class="fas fa-chart-pie"></i> Calculation Results</h3>
+                    <div class="calculator-result">
+                        <div class="result-item">
+                            <div class="label">Principal Amount</div>
+                            <div class="value" id="calcPrincipal">K5,000</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="label">Interest Rate</div>
+                            <div class="value" id="calcRate">20%</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="label">Interest Amount</div>
+                            <div class="value" id="calcInterest">K1,000</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="label">Total Repayment</div>
+                            <div class="value" id="calcTotal">K6,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Loan Management Dashboard</h2>
+                </div>
+
+                <div id="applicationsList">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i>
+                        No applications submitted yet. Submit your first application to see it here.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms & Conditions Section -->
+        <div id="terms" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-book"></i>
+                    <h2>Terms & Conditions</h2>
+                </div>
+
+                <div class="loan-requirements">
+                    <h3>Loan Requirements & Regulations</h3>
+                    <ul class="requirements-list">
+                        <li><i class="fas fa-check-circle"></i> All loans require high-value collateral</li>
+                        <li><i class="fas fa-check-circle"></i> First-time borrowers limited to K5,000</li>
+                        <li><i class="fas fa-check-circle"></i> Must be Zambian citizen with valid NRC</li>
+                        <li><i class="fas fa-check-circle"></i> Collateral becomes property if loan defaults</li>
+                        <li><i class="fas fa-check-circle"></i> One-week grace period with 10% additional interest</li>
+                        <li><i class="fas fa-check-circle"></i> Extension allowed once per loan</li>
+                        <li><i class="fas fa-check-circle"></i> All transactions via Airtel Mobile Money</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Important:</strong> By submitting an application, you agree to all terms and conditions outlined in our loan agreement.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Application Submitted!</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="alert alert-success">
+                <i class="fas fa-thumbs-up"></i>
+                <div>
+                    <strong>Your loan application has been successfully submitted!</strong>
+                    <p>Application ID: <span id="modalApplicationId"></span></p>
+                    <p>We'll review your application and contact you within 24 hours.</p>
+                </div>
+            </div>
+            <div class="application-summary">
+                <h3>Application Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="label">Applicant Name</div>
+                        <div class="value" id="modalName"></div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Loan Amount</div>
+                        <div class="value" id="modalAmount"></div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Duration</div>
+                        <div class="value" id="modalDuration"></div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Total Repayment</div>
+                        <div class="value" id="modalTotal"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-full" onclick="closeModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Application data storage
+        let applications = JSON.parse(localStorage.getItem('loanApplications') || '[]');
+        let currentApplicationId = null;
+
+        // Interest rates mapping
+        const interestRates = {
+            '1': 20,
+            '2': 25,
+            '3': 35,
+            '4': 40
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            calculateLoan();
+            updateDashboard();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('collectDate').min = today;
+            document.getElementById('collectDate').value = today;
+            
+            // Calculate due date when collection date or duration changes
+            document.getElementById('collectDate').addEventListener('change', calculateDueDate);
+            document.getElementById('loanDuration').addEventListener('change', function() {
+                calculateDueDate();
+                updateLoanSummary();
+            });
+            
+            document.getElementById('loanAmount').addEventListener('input', updateLoanSummary);
+        });
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked nav button
+            event.target.classList.add('active');
+        }
+
+        // Form initialization
+        function initializeForm() {
+            const form = document.getElementById('loanApplicationForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+            
+            // File upload handlers
+            setupFileUpload('idDocument', 'idPreview');
+            setupFileUpload('studentId', 'studentPreview');
+            setupFileUpload('collateralDocument', 'collateralPreview');
+            
+            updateProgress();
+        }
+
+        // File upload setup
+        function setupFileUpload(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            input.addEventListener('change', function() {
+                const files = this.files;
+                preview.innerHTML = '';
+                
+                if (files.length > 0) {
+                    preview.style.display = 'block';
+                    Array.from(files).forEach((file, index) => {
+                        const fileInfo = document.createElement('div');
+                        fileInfo.innerHTML = `
+                            <i class="fas fa-file"></i>
+                            <strong>${file.name}</strong> 
+                            <span style="color: #666;">(${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                        `;
+                        fileInfo.style.marginBottom = '5px';
+                        preview.appendChild(fileInfo);
+                    });
+                } else {
+                    preview.style.display = 'none';
+                }
+                updateProgress();
+            });
+        }
+
+        // Progress tracking
+        function updateProgress() {
+            const form = document.getElementById('loanApplicationForm');
+            const requiredInputs = form.querySelectorAll('[required]');
+            const fileInputs = form.querySelectorAll('input[type="file"][required]');
+            
+            let filledCount = 0;
+            
+            // Check regular required fields
+            requiredInputs.forEach(input => {
+                if (input.type === 'file') {
+                    if (input.files && input.files.length > 0) {
+                        filledCount++;
+                    }
+                } else if (input.value.trim() !== '') {
+                    filledCount++;
+                }
+            });
+            
+            const totalRequired = requiredInputs.length;
+            const progress = Math.round((filledCount / totalRequired) * 100);
+            
+            document.getElementById('applicationProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${progress}% Complete (${filledCount}/${totalRequired} fields)`;
+        }
+
+        // Due date calculation
+        function calculateDueDate() {
+            const collectDate = document.getElementById('collectDate').value;
+            const duration = parseInt(document.getElementById('loanDuration').value);
+            
+            if (collectDate && duration) {
+                const startDate = new Date(collectDate);
+                const dueDate = new Date(startDate);
+                dueDate.setDate(dueDate.getDate() + (duration * 7));
+                
+                document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+            }
+        }
+
+        // Loan summary update
+        function updateLoanSummary() {
+            const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const duration = document.getElementById('loanDuration').value;
+            const rate = interestRates[duration] || 0;
+            
+            const interest = (amount * rate) / 100;
+            const total = amount + interest;
+            
+            document.getElementById('summaryAmount').textContent = `K${amount.toLocaleString()}`;
+            document.getElementById('summaryRate').textContent = `${rate}%`;
+            document.getElementById('summaryInterest').textContent = `K${interest.toLocaleString()}`;
+            document.getElementById('summaryTotal').textContent = `K${total.toLocaleString()}`;
+        }
+
+        // Loan calculator
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+            const duration = document.getElementById('calcDuration').value;
+            const rate = interestRates[duration] || 0;
+            
+            const interest = (amount * rate) / 100;
+            const total = amount + interest;
+            
+            document.getElementById('calcPrincipal').textContent = `K${amount.toLocaleString()}`;
+            document.getElementById('calcRate').textContent = `${rate}%`;
+            document.getElementById('calcInterest').textContent = `K${interest.toLocaleString()}`;
+            document.getElementById('calcTotal').textContent = `K${total.toLocaleString()}`;
+        }
+
+        // Form submission
+        document.getElementById('loanApplicationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<div class="loading"></div> Processing...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Generate application ID
+                currentApplicationId = 'SL' + Date.now().toString().substr(-8) + Math.random().toString(36).substr(2, 4).toUpperCase();
+                
+                // Collect form data
+                const formData = new FormData(this);
+                const applicationData = {
+                    id: currentApplicationId,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending',
+                    fullName: formData.get('fullName'),
+                    phoneNumber: formData.get('phoneNumber'),
+                    nextOfKinPhone: formData.get('nextOfKinPhone'),
+                    nationality: formData.get('nationality'),
+                    loanAmount: parseFloat(formData.get('loanAmount')),
+                    loanDuration: parseInt(formData.get('loanDuration')),
+                    collectDate: formData.get('collectDate'),
+                    dueDate: formData.get('dueDate'),
+                    collateralDescription: formData.get('collateralDescription'),
+                    interestRate: interestRates[formData.get('loanDuration')],
+                    interestAmount: (parseFloat(formData.get('loanAmount')) * interestRates[formData.get('loanDuration')]) / 100,
+                    totalRepayment: parseFloat(formData.get('loanAmount')) + ((parseFloat(formData.get('loanAmount')) * interestRates[formData.get('loanDuration')]) / 100),
+                    documents: {
+                        idDocument: formData.get('idDocument')?.name || 'Not provided',
+                        studentId: formData.get('studentId')?.name || 'Not provided',
+                        collateralDocument: Array.from(formData.getAll('collateralDocument')).map(file => file.name).join(', ') || 'Not provided'
+                    }
+                };
+                
+                // Store application
+                applications.unshift(applicationData);
+                
+                // Show success modal
+                showSuccessModal(applicationData);
+                
+                // Reset form
+                this.reset();
+                updateProgress();
+                document.getElementById('dueDate').value = '';
+                document.getElementById('summaryAmount').textContent = 'K0';
+                document.getElementById('summaryRate').textContent = '0%';
+                document.getElementById('summaryInterest').textContent = 'K0';
+                document.getElementById('summaryTotal').textContent = 'K0';
+                
+                // Update dashboard
+                updateDashboard();
+                
+            } catch (error) {
+                console.error('Application submission error:', error);
+                alert('An error occurred while submitting your application. Please try again.');
+            } finally {
+                // Restore button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Success modal
+        function showSuccessModal(applicationData) {
+            document.getElementById('modalApplicationId').textContent = applicationData.id;
+            document.getElementById('modalName').textContent = applicationData.fullName;
+            document.getElementById('modalAmount').textContent = `K${applicationData.loanAmount.toLocaleString()}`;
+            document.getElementById('modalDuration').textContent = `${applicationData.loanDuration} week(s)`;
+            document.getElementById('modalTotal').textContent = `K${applicationData.totalRepayment.toLocaleString()}`;
+            
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const dashboardContainer = document.getElementById('applicationsList');
+            
+            if (applications.length === 0) {
+                dashboardContainer.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i>
+                        No applications submitted yet. Submit your first application to see it here.
+                    </div>
+                `;
+                return;
+            }
+            
+            dashboardContainer.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3><i class="fas fa-list"></i> Your Loan Applications (${applications.length})</h3>
+                </div>
+            `;
+            
+            applications.forEach(app => {
+                const statusClass = app.status === 'approved' ? 'status-approved' : 
+                                  app.status === 'rejected' ? 'status-rejected' : 'status-pending';
+                
+                const applicationCard = document.createElement('div');
+                applicationCard.className = 'card fade-in';
+                applicationCard.innerHTML = `
+                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: var(--primary-color);">Application #${app.id}</h3>
+                        <div class="status-badge ${statusClass}">
+                            ${app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                        </div>
+                    </div>
+                    
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="label">Applicant</div>
+                            <div class="value">${app.fullName}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Amount</div>
+                            <div class="value">K${app.loanAmount.toLocaleString()}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Duration</div>
+                            <div class="value">${app.loanDuration} week(s)</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Interest</div>
+                            <div class="value">${app.interestRate}%</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Collection Date</div>
+                            <div class="value">${new Date(app.collectDate).toLocaleDateString()}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Due Date</div>
+                            <div class="value">${new Date(app.dueDate).toLocaleDateString()}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Total Repayment</div>
+                            <div class="value" style="color: var(--accent-color); font-weight: 700;">K${app.totalRepayment.toLocaleString()}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="label">Submitted</div>
+                            <div class="value">${new Date(app.timestamp).toLocaleDateString()} ${new Date(app.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                        <strong>Collateral:</strong> ${app.collateralDescription}
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <strong>Contact:</strong> ${app.phoneNumber} | <strong>Next of Kin:</strong> ${app.nextOfKinPhone}
+                    </div>
+                `;
+                
+                dashboardContainer.appendChild(applicationCard);
+            });
+        }
+
+        // Utility function to format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-ZM', {
+                style: 'currency',
+                currency: 'ZMW',
+                minimumFractionDigits: 0
+            }).format(amount).replace('ZMW', 'K');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Ctrl+S to save/submit form (if in application section)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                const activeSection = document.querySelector('.section.active');
+                if (activeSection && activeSection.id === 'application') {
+                    document.getElementById('loanApplicationForm').dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        // Auto-save form data to prevent data loss
+        function autoSaveForm() {
+            const form = document.getElementById('loanApplicationForm');
+            const formData = new FormData(form);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (form.elements[key].type !== 'file') {
+                    data[key] = value;
+                }
+            }
+        }
+
+        // Restore form data
+        function restoreFormData() {
+            updateProgress();
+        }
+
+        // Mobile responsiveness enhancements
+        function handleMobileMenu() {
+            const navigation = document.querySelector('.navigation');
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                navigation.style.flexDirection = 'column';
+            } else {
+                navigation.style.flexDirection = 'row';
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', handleMobileMenu);
+        document.addEventListener('DOMContentLoaded', handleMobileMenu);
+
+        // Form validation enhancements
+        function validateForm() {
+            const form = document.getElementById('loanApplicationForm');
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const phone = document.getElementById('phoneNumber').value;
+            const nextOfKinPhone = document.getElementById('nextOfKinPhone').value;
+            
+            // Amount validation
+            if (amount < 500 || amount > 100000) {
+                alert('Loan amount must be between K500 and K100,000');
+                return false;
+            }
+            
+            // Phone number validation (basic Zambian format)
+            const phoneRegex = /^(\+260|0)[79]\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid Zambian phone number');
+                return false;
+            }
+            
+            if (!phoneRegex.test(nextOfKinPhone)) {
+                alert('Please enter a valid next of kin phone number');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Enhanced form submission with validation
+        document.getElementById('loanApplicationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
